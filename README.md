@@ -1,66 +1,45 @@
-🤖 Agente Híbrido de IA: RAG + Web Search (Carrarurquía)
-Este proyecto implementa un agente inteligente capaz de responder consultas de dos formas: analizando documentos internos (PDFs de reportes trimestrales de la empresa ficticia Carrarurquía) o realizando búsquedas en tiempo real en la web.
+# 🤖 Agente Híbrido de IA: RAG + Web Search (Proyecto Carrarurquía)
 
-Utiliza una arquitectura de Grafo de Estados (LangGraph) para clasificar la intención del usuario y decidir la fuente de información más adecuada.
+Este repositorio contiene la implementación de un **Agente de Inteligencia Artificial Híbrido** diseñado para resolver consultas complejas. El sistema decide de forma autónoma si debe buscar respuestas en **documentos técnicos internos** (PDFs de reportes empresariales) o realizar una **búsqueda en tiempo real en la Web**.
 
-🚀 Características Principales
-RAG (Retrieval-Augmented Generation): Extracción de conocimiento desde reportes en formato PDF utilizando FAISS como base de datos vectorial.
+Desarrollado en el marco de la *Inmersión de Agentes de IA - Marzo 2026*.
 
-Web Search Integration: Capacidad de consultar internet mediante SerpAPI para preguntas de cultura general o actualidad (ej. deportes, eventos 2026).
+## 🚀 Características Principales
 
-Orquestación con LangGraph: Un flujo de control lógico que decide dinámicamente el camino de la respuesta.
+* **Clasificación Inteligente:** Utiliza un nodo "Agente" que actúa como router para decidir la fuente de información más fiable.
+* **RAG (Retrieval-Augmented Generation):** Procesamiento de reportes trimestrales de *Carrarurquía* mediante segmentación de texto (`RecursiveCharacterTextSplitter`) e indexación vectorial con `FAISS`.
+* **Web Searching:** Integración con `SerpAPI` para obtener datos de actualidad que no están presentes en los documentos locales.
+* **Arquitectura de Grafos:** Implementado con `LangGraph` para una gestión de estados robusta y circular.
+* **Modelos Utilizados:** * **Generación:** `gemini-2.5-flash`
+    * **Embeddings:** `models/gemini-embedding-001`
 
-Modelos de Última Generación: Implementado con Gemini 2.5 Flash para razonamiento y generación de contenido, y Gemini Embeddings para la vectorización.
+## 🛠️ Stack Tecnológico
 
-Salida Multiformato: Respuestas siempre entregadas en un formato Markdown elegante y estructurado.
+* **Lenguaje:** Python 3.x
+* **Orquestación:** LangChain & LangGraph
+* **LLM:** Google Generative AI (Gemini API)
+* **Base de Datos Vectorial:** FAISS (Facebook AI Similarity Search)
+* **Búsqueda Externa:** SerpAPI
 
-🛠️ Stack Tecnológico
-Lenguaje: Python (Google Colab)
+## 📐 Flujo del Grafo (Arquitectura)
 
-LLM: Google Generative AI (gemini-2.5-flash)
+El flujo lógico del agente es el siguiente:
 
-Orquestador: LangChain / LangGraph
+1.  **START:** El usuario ingresa una pregunta.
+2.  **Agente:** Clasifica la pregunta como `RAG` (específica de la empresa) o `Web` (general/actualidad).
+3.  **RAG / Web:** Se ejecutan los nodos de extracción de contexto correspondientes.
+4.  **Markdown:** Un nodo final sintetiza la respuesta con formato enriquecido.
+5.  **END:** Entrega del resultado al usuario.
 
-Base de Datos Vectorial: FAISS (Facebook AI Similarity Search)
+## 📋 Requisitos e Instalación
 
-Herramientas de Búsqueda: SerpAPI
+### 1. Variables de Entorno
+Es necesario configurar los siguientes "Secrets" en tu entorno de ejecución (Google Colab o archivo `.env`):
+* `API_KEY_GENAI`: Tu API Key de Google AI Studio.
+* `SERPAPI_API_KEY`: Tu API Key de SerpAPI.
 
-Procesamiento de Documentos: PyPDF / LangChain Document Loaders
-
-📐 Arquitectura del Agente
-El flujo del agente sigue el siguiente esquema lógico:
-
-Agente (Clasificador): Recibe la pregunta y decide si es para "RAG" (Documentos locales) o "Web".
-
-Nodo RAG: Si la pregunta es sobre Carrarurquía, busca en los fragmentos de PDF.
-
-Nodo Web: Si la pregunta es general, realiza una búsqueda en Google.
-
-Nodo Markdown: Recibe el contexto y genera la respuesta final formateada.
-
-📋 Requisitos Previos
-Necesitarás configurar las siguientes variables de entorno (Secretos en Colab):
-
-API_KEY_GENAI: Tu clave de API de Google AI Studio.
-
-SERPAPI_API_KEY: Tu clave de API de SerpAPI para búsquedas web.
-
-💻 Instalación
-Bash
-pip install -q google-genai langchain-community pypdf langchain-text-splitters \
-               langchain-google-genai faiss-cpu langgraph google-search-results
-📖 Ejemplo de Uso
-Consulta de Documentos Internos (RAG)
-Pregunta: "¿Dónde se mantuvo concentrado el mix de productos?"
-Decisión del Agente: RAG
-Respuesta: "El mix de productos se mantuvo concentrado en circuitos combinados (Estambul + Capadocia)."
-
-Consulta de Información General (Web)
-Pregunta: "¿Cuántos mundiales de fútbol tiene Brasil?"
-Decisión del Agente: Web
-Respuesta: "Brasil ha conquistado la Copa Mundial de Fútbol en cinco (5) ocasiones (1958, 1962, 1970, 1994, 2002)..."
-
-📂 Estructura de Datos
-El sistema carga automáticamente los archivos PDF en la carpeta /PDFs, los divide en fragmentos de 400 caracteres con un solapamiento de 40 para no perder contexto y los indexa en la base vectorial.
-
-Desarrollado como parte de la Inmersión en Agentes de IA - 2026.
+### 2. Librerías Necesarias
+```bash
+pip install -q google-genai langchain-community pypdf \
+               langchain-text-splitters langchain-google-genai \
+               faiss-cpu langgraph google-search-results
